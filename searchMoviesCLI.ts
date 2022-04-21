@@ -14,12 +14,13 @@ async function execute(){
     try{
         await client.connect()
         console.log('connected succesfully to omdb')
-        while (true) {
+        let a = true;
+        while (a) {
             const userPrompt = question('Search for a movie, or q to quit: ');
-            if (userPrompt === 'q'){break}
+            if (userPrompt === 'q'){a = false;}
             else{
-                const text = "select id, name, date, runtime, budget, revenue, vote_average, votes_count from movies where lower(name) like $1 order by date desc limit 20";
-                const values = [`${userPrompt}`]
+                const text = "select id, name, date, runtime, budget, revenue, vote_average, votes_count from movies where lower(name) like $1 and kind = 'movie' order by date desc limit 10";
+                const values = [`%${userPrompt}%`];
                 const results = await client.query(text, values)
                 console.table(results.rows)
 
